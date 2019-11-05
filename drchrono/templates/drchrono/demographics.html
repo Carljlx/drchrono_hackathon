@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block content %}
+{% if error %}
+<br />
+<h3>{{ error }}</h3>
+<br />
+{% endif %}
+<br />
+<h2>Please update your demographics information</h2>
+<br />
+<form method="post">
+    {% csrf_token %}
+    {{ form }}
+    <br />
+    <input class="btn btn-info" type="submit" value="Update and checkin"/></a>
+</form>
+{% endblock %}

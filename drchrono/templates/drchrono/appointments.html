@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block content %}
+<br />
+<meta http-equiv="refresh" content="30">
+<h2><center style="color:black;">Today's Appointments</center></h2>
+<h3><center style="color:black;">{{ today }}</center></h3>
+<br>
+<div align="right" class="container">
+<h4>Avg waiting time: {{ avg_hour }} h {{ avg_min }} min</h4>
+<form align="left">
+{{ search_form }}
+<input class="btn btn-info" type="submit" value="Search" />
+</form>
+</div>
+<br />
+<div class="container">
+
+<div class="row">
+{% for appointment in appointments %}
+<div class="col-sm-3">
+{% if appointment.status == "Arrived" %}
+<div class="card text-white bg-warning mb-4 shadow-sm">
+{% elif appointment.status == "Complete" %}
+<div class="card text-white bg-dark mb-4 shadow-sm">
+{% elif appointment.status == "In Session" or appointment.status == "In Room" %}
+<div class="card text-white bg-success mb-4 shadow-sm">
+{% else %}
+<div class="card mb-4 shadow-sm">
+{% endif %}
+
+<div class="card-header">
+<h4 class="my-0 font-weight-normal text-center">{{ appointment.patient_first_name }} {{ appointment.patient_last_name }}</h4>
+</div>
+
+<div class="card-body">
+{% if appointment.status == "Arrived" %}
+<h4 class="card-title pricing-card-title text-center">Waited: {{ appointment.curr_waiting_time }}</h4>
+{% elif appointment.status == "Complete" %}
+<h4 class="card-title pricing-card-title text-center">Duration:</h4>
+<h4 class="card-title pricing-card-title text-center">{{ appointment.duration }}</h4>
+{% elif  appointment.status == "In Session" %}
+<h4 class="card-title pricing-card-title text-center">In Treatment</h4>
+{% else %}
+<h4 class="card-title pricing-card-title text-center">{{ appointment.scheduled_time }}</h4>
+{% endif %}
+
+<ul class="list-unstyled mt-3 mb-4 text-center">
+<li>Room {{ appointment.exam_room }}</li>
+{% if appointment.status == "Arrived" %}
+<li>Arrived at:{{ appointment.arrival_time }}</li>
+{% else %}
+<li>{{ appointment.status }}</li>
+{% endif %}
+</ul>
+
+{% if appointment.status == "Arrived" %}
+<a href="status_change/{{ appointment.id }}"><button type="button" onclick="if(confirm('Start this appointment?')==false)return false;" class="btn btn-lg btn-block btn-outline-primary">Start</button></a>
+<br />
+{% elif appointment.status == "In Session" or appointment.status == "In Room" %}
+<a href="status_change/{{ appointment.id }}"><button type="button" onclick="if(confirm('Finish this appointment?')==false)return false;" class="btn btn-lg btn-block btn-outline-primary">Finish</button></a>
+<br />
+{% elif appointment.status == "Complete" %}
+<h6 class="card-title pricing-card-title text-center">Waiting time: {{ appointment.waiting_time }}</h6>
+{% else %}
+<a href="status_change/{{ appointment.id }}"><button type="button" onclick="if(confirm('Cancel this appointment?')==false)return false;" class="btn btn-lg btn-block btn-outline-primary">Cancel</button></a>
+<br />
+{% endif %}
+
+<a href="https://www.drchrono.com/appointments/{{ appointment.id }}" target="_blank"><button type="button" class="btn btn-lg btn-block btn-outline-primary">Check detail</button></a>
+</div>
+</div>
+</div>
+{% endfor %}
+
+</div>
+</div>
+</div>
+</div>
+</div>
+{% endblock %}

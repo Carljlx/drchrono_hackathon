@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block content %}
+{% if user.is_authenticated %}
+<br />
+<div class="col-3">
+<a href="{% url 'authorize' %}"><button class="btn btn-info btn-block">Authorize on Drchrono.com</button></a>
+<br />
+<a href="{% url 'patients' %}"><button class="btn btn-info btn-block">Update Patients Information</button></a>
+</div>
+{% else %}
+<br />
+<h3>Welcome to doctor Carl Yu's kiosk</h3>
+<br />
+<h5>If you are doctor, please log in!</h5>
+<br />
+<h5>If you are patient, please wait for the doctor and check in.</h5>
+<br />
+<br />
+{% endif %}
+{% endblock %}
